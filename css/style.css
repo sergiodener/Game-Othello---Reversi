@@ -1,0 +1,12 @@
+body{
+	height:900px;
+	margin: 0;
+    padding: 0;
+    background: #b7bf76;
+    overflow: hidden;
+}
+
+svg {
+	width: 100%;
+	height:inherit;
+}
