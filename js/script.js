@@ -43,15 +43,16 @@ function start() {
 	otPlayer= playerB;
 	
 	var	a = ((cW-cH)/2),
-		aux = (document.documentElement.clientHeight)-cH;
-	bk =  (cH-cH*.05)/8;
+		aux = (document.documentElement.clientHeight)-cH,
+		bk =  (cH-cH*.05)/8,
+		f = gm.filter(Snap.filter.shadow(2, 4, .5)),
 	
 		table= gm.rect(a , bk*.25, cH-bk*.45, cH-bk*.45).attr({
 			fill: "#060",
 			id: "table",
 			stroke:"#000",
 			strokeWidth:"3"
-		});
+		}),
 		score= gm.rect(0,cH-bk*.15, cW, aux).attr({
 			fill: "#bbc495",
 			id: "scoreB"
@@ -60,24 +61,28 @@ function start() {
 		scrW= gm.rect(bk*.1,cH-bk*.15,(cW-.2*bk)/2, aux-bk*.1).attr({
 			fill: "#e8edde",
 			id: "scoreW"
-		})
+		}),
 		
 		plW= gm.text((cW-.2*bk)/4.5, cH*(1.05), "White").attr({
-			"class": "score"
-		});
+			"class": "score",
+			filter: f
+		}),
 		
 		plWS= gm.text((cW-.2*bk)/4.3, cH*(1.16),2).attr({
 			"class": "score point",
-			id:"pntsW"
-		});
+			id:"pntsW",
+			filter: f
+		}),
 		
 		plB= gm.text((cW-.2*bk)/1.35, cH*(1.05), "Black").attr({
-			"class": "score"
-		});
+			"class": "score",
+			filter: f
+		}),
 		
 		plBS= gm.text((cW-.2*bk)/1.34, cH*(1.16),2).attr({
 			"class": "score point",
-			id:"pntsB"
+			id:"pntsB",
+			filter: f
 		});
 		
 	g = gm.g();
@@ -103,13 +108,16 @@ function start() {
 		r = bk/3;
 	for( y = 0 ; y<8; y++){
 		for (var x = 0; x<8; x++){
-			var circle = gm.circle((x*bk+x1), (y*bk+y1),  r).attr({
-				strokeWidth: 1,
-				stroke: "#000",
-				fill: "#060",
-				id: (x+""+y)
-			});
-			var text = gm.text((x*bk+x1), (y*bk+y1), x+""+y );
+			var f = gm.filter(Snap.filter.shadow(0, 2, .7)),
+				circle = gm.circle((x*bk+x1), (y*bk+y1),  r).attr({
+					strokeWidth: 2,
+					stroke: "#010",
+					"stroke-opacity": .4,
+					fill: "#060",
+					id: (x+""+y),
+					filter: f
+				});
+			//var text = gm.text((x*bk+x1), (y*bk+y1), x+""+y );
 			circle.node.onclick = function (e){
 				put(e);
 			};
@@ -141,9 +149,6 @@ function put(circle){
 			otPlayer = tmp;
 			}
 	}
-	
-	
-	
 	actualPlayer.inGame();
 	document.getElementById("pntsB").innerHTML;
 	document.getElementById("pntsW").innerHTML;
