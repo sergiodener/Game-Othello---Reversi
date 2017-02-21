@@ -11,14 +11,13 @@ class Player {
 		this.pieces = (pieces);
 		this.points = points;
 		this.cUn = cUn;
-		this.score = score;
-		
+		this.score = score;	
 	}
 
 	 inGame(){
 		document.getElementById(this.score).setAttribute("fill", "#ffd000");
-		otPlayer.nGame();
 		document.getElementById(this.points).innerHTML=this.pieces.length;
+		otPlayer.nGame();
 	}
 	
 	 nGame(){
@@ -33,8 +32,6 @@ class Player {
 	getPoints(){
 		return this.pieces.length;
 	}
-	
-	
 	
 }
 
@@ -138,16 +135,15 @@ function put(circle){
 		resArr =[];
 		srhArr.forEach(verify);
 		console.log (resArr, srhArr);
-		change(circle.target.id);
+			if(change(circle.target.id)){
+				var tmp = actualPlayer;
+				actualPlayer=otPlayer;
+			otPlayer = tmp;
+			}
 	}
-	if (actualPlayer.color =="#fff"){
-		actualPlayer=playerB;
-		otPlayer=playerW;
-	} else {
-		actualPlayer=playerW;
-		otPlayer=playerB;
-		
-	}
+	
+	
+	
 	actualPlayer.inGame();
 	document.getElementById("pntsB").innerHTML;
 	document.getElementById("pntsW").innerHTML;
@@ -155,18 +151,20 @@ function put(circle){
 
 function change(circleID){
 	var p = parseInt(circleID),
-		last=0;
+		last=0,
+		changed= false;
 		
 	for(var i=0; i< resArr.length; i++){
 		var offset = (parseInt(resArr[i])-p),
 			next= String(offset+p);
 		last=(search(offset, resArr[i], actualPlayer.color));
 		console.log(i, resArr.length);
-		if (last!=0&& p+offset!=last){
+		if (last!==0&& p+offset!=last){
 			for (var y = p; y!=(last);y+=offset){
 				var aux = y<10?"0"+y:String(y);
 				console.log("aux", aux);
 				document.getElementById(aux).setAttribute("fill", actualPlayer.color);
+				changed=true;
 				if (circleID!==aux){
 					console.log("remove",  aux);
 					otPlayer.pieces.splice(otPlayer.pieces.indexOf(String(aux)),1);	
@@ -175,36 +173,34 @@ function change(circleID){
 				if(actualPlayer.pieces.indexOf(aux)==-1){
 						actualPlayer.pieces.push(String(aux));
 				}
-				
 			}
+			
 		}
 	}
+	return changed;
 	
 }
 
 function search(offset, next, pcolor){
 	
 	if(parseInt(next)<10 && parseInt(next)>=0){
-		next="0"+parseInt(next);
-		
+		next="0"+parseInt(next);	
 	}
 	console.log("next", (next));
 	
-		if ((String(next)).includes("8")|(String(next)).includes("9")|(parseInt(next)<0)){
+	if ((String(next)).includes("8")|(String(next)).includes("9")|(parseInt(next)<0)|document.getElementById(next)==null){
 		return 0;
-	} else{
-		if(document.getElementById(next)==null){
+	} else {
+		if(document.getElementById(next).getAttribute("fill")=="#006600"){
 			return 0;
-		} else{
-			if (document.getElementById(next).getAttribute("fill")=="#006600"){
-				return 0;
-			}
 		}
 	}
+	
 	if(document.getElementById(next).getAttribute("fill")==pcolor){
 		return (next);
 	}
-		return search(offset, String(parseInt(next)+offset), pcolor);		
+	
+	return search(offset, String(parseInt(next)+offset), pcolor);		
 	
 }
 
