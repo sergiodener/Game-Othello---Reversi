@@ -39,8 +39,8 @@ function start() {
     gm = Snap("#game");
 	playerW = new Player ("#fff", ["33","44"], "#cce0fc",  "scoreW", "pntsW");
 	playerB = new Player ("#000", ["34","43"], "#bbb7ae",  "scoreB", "pntsB");
-	actualPlayer = playerW;
-	otPlayer= playerB;
+	actualPlayer = playerB;
+	otPlayer= playerW;
 	
 	var	a = ((cW-cH)/2),
 		aux = (document.documentElement.clientHeight)-cH,
@@ -124,7 +124,7 @@ function start() {
 		}
 			
 	}
-	playerW.inGame();
+	playerB.inGame();
 	document.getElementById("33").setAttribute("fill", "#fff");
 	document.getElementById("44").setAttribute("fill", "#fff");
 	document.getElementById("43").setAttribute("fill", "#000");
