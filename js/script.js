@@ -1,12 +1,52 @@
 var cW = document.documentElement.clientWidth,
-	cH = document.documentElement.clientHeight;
+	cH = document.documentElement.clientHeight*.75;
+	
+if (cW<cH){ // caso a altura seja maior que a largura 
+	cH=cW*.85;
+}
+
+class Player {
+	constructor(color, pieces,  cUn, score, points){
+		this.color = color;
+		this.pieces = (pieces);
+		this.points = points;
+		this.cUn = cUn;
+		this.score = score;
+		
+	}
+
+	 inGame(){
+		document.getElementById(this.score).setAttribute("fill", "#ffd000");
+		otPlayer.nGame();
+		document.getElementById(this.points).innerHTML=this.pieces.length;
+	}
+	
+	 nGame(){
+		document.getElementById(this.score).setAttribute("fill", this.cUn);
+		document.getElementById(this.points).innerHTML=this.pieces.length;
+	}
+	
+	get getPieces(){
+		return this.pieces;
+	}
+	
+	getPoints(){
+		return this.pieces.length;
+	}
+	
+	
+	
+}
 
 function start() {
     gm = Snap("#game");
-	playerW = {color:"#fff", points:2};
-	playerB = {color:"#000", points:2};
-	player = playerW;
-	var	a = ((cW-cH)/2);
+	playerW = new Player ("#fff", ["33","44"], "#cce0fc",  "scoreW", "pntsW");
+	playerB = new Player ("#000", ["34","43"], "#bbb7ae",  "scoreB", "pntsB");
+	actualPlayer = playerW;
+	otPlayer= playerB;
+	
+	var	a = ((cW-cH)/2),
+		aux = (document.documentElement.clientHeight)-cH;
 	bk =  (cH-cH*.05)/8;
 	
 		table= gm.rect(a , bk*.25, cH-bk*.45, cH-bk*.45).attr({
@@ -15,7 +55,34 @@ function start() {
 			stroke:"#000",
 			strokeWidth:"3"
 		});
-	console.log(a, cW, cH);
+		score= gm.rect(0,cH-bk*.15, cW, aux).attr({
+			fill: "#bbc495",
+			id: "scoreB"
+		})
+		
+		scrW= gm.rect(bk*.1,cH-bk*.15,(cW-.2*bk)/2, aux-bk*.1).attr({
+			fill: "#e8edde",
+			id: "scoreW"
+		})
+		
+		plW= gm.text((cW-.2*bk)/4.5, cH*(1.05), "White").attr({
+			"class": "score"
+		});
+		
+		plWS= gm.text((cW-.2*bk)/4.3, cH*(1.16),2).attr({
+			"class": "score point",
+			id:"pntsW"
+		});
+		
+		plB= gm.text((cW-.2*bk)/1.35, cH*(1.05), "Black").attr({
+			"class": "score"
+		});
+		
+		plBS= gm.text((cW-.2*bk)/1.34, cH*(1.16),2).attr({
+			"class": "score point",
+			id:"pntsB"
+		});
+		
 	g = gm.g();
 	
 	
@@ -47,11 +114,12 @@ function start() {
 			});
 			var text = gm.text((x*bk+x1), (y*bk+y1), x+""+y );
 			circle.node.onclick = function (e){
-				verify(e);
+				put(e);
 			};
 		}
 			
 	}
+	playerW.inGame();
 	document.getElementById("33").setAttribute("fill", "#fff");
 	document.getElementById("44").setAttribute("fill", "#fff");
 	document.getElementById("43").setAttribute("fill", "#000");
@@ -59,36 +127,106 @@ function start() {
 	
 }
 
-function verify(circle){
+function put(circle){
 	var id = parseInt(circle.target.id);
 	console.log("click", id);
 	obj=document.getElementById(circle.target.id);
 	color=obj.getAttribute("fill");
-	console.log(color);
 	
 	if(color=="#006600"){
-		var srhArr= [id,id-11, id-10, id-9, id-1, id+1, id+9, id+10, id+11];
-		srhArr.forEach(change);
+		var srhArr= [id-11, id-10, id-9, id-1, id+1, id+9, id+10, id+11];
+		resArr =[];
+		srhArr.forEach(verify);
+		console.log (resArr, srhArr);
+		change(circle.target.id);
 	}
-	if (player.color =="#fff"){
-		player=playerB;
-	}else {
-		player=playerW;
+	if (actualPlayer.color =="#fff"){
+		actualPlayer=playerB;
+		otPlayer=playerW;
+	} else {
+		actualPlayer=playerW;
+		otPlayer=playerB;
+		
+	}
+	actualPlayer.inGame();
+	document.getElementById("pntsB").innerHTML;
+	document.getElementById("pntsW").innerHTML;
+}
+
+function change(circleID){
+	var p = parseInt(circleID),
+		last=0;
+		
+	for(var i=0; i< resArr.length; i++){
+		var offset = (parseInt(resArr[i])-p),
+			next= String(offset+p);
+		last=(search(offset, resArr[i], actualPlayer.color));
+		console.log(i, resArr.length);
+		if (last!=0&& p+offset!=last){
+			for (var y = p; y!=(last);y+=offset){
+				var aux = y<10?"0"+y:String(y);
+				console.log("aux", aux);
+				document.getElementById(aux).setAttribute("fill", actualPlayer.color);
+				if (circleID!==aux){
+					console.log("remove",  aux);
+					otPlayer.pieces.splice(otPlayer.pieces.indexOf(String(aux)),1);	
+				}
+				console.log(actualPlayer.pieces.indexOf(aux), aux);
+				if(actualPlayer.pieces.indexOf(aux)==-1){
+						actualPlayer.pieces.push(String(aux));
+				}
+				
+			}
+		}
 	}
 	
 }
 
-function change(circleID){
-	console.log(circleID);
+function search(offset, next, pcolor){
+	
+	if(parseInt(next)<10 && parseInt(next)>=0){
+		next="0"+parseInt(next);
+		
+	}
+	console.log("next", (next));
+	
+		if ((String(next)).includes("8")|(String(next)).includes("9")|(parseInt(next)<0)){
+		return 0;
+	} else{
+		if(document.getElementById(next)==null){
+			return 0;
+		} else{
+			if (document.getElementById(next).getAttribute("fill")=="#006600"){
+				return 0;
+			}
+		}
+	}
+	if(document.getElementById(next).getAttribute("fill")==pcolor){
+		return (next);
+	}
+		return search(offset, String(parseInt(next)+offset), pcolor);		
+	
+}
+
+function verify(circleID){
+	console.log("verify", circleID);
 	if(parseInt(circleID)<0|String(circleID).includes("8")|String(circleID).includes("9")){
 		return;
 	}
 	if (circleID>=10){
-		document.getElementById(circleID).setAttribute("fill",  player.color);
+		var tmp = otPlayer.getPieces.find(function(e){return (e==circleID)});
+		if(tmp == undefined){
+			return;
+		}
+		resArr.push(String(tmp));
+		
 	}
 	else{
-		document.getElementById(0+""+circleID).setAttribute("fill",  player.color);
+		var tmp = otPlayer.getPieces.find(function(e){return (e==0+""+circleID)});
+		if(tmp == undefined){
+			return;
+		}
+		resArr.push(0+""+circleID)
 	}
-	
 	
 }

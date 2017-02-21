@@ -1,5 +1,5 @@
 body{
-	height:900px;
+	height:1000px;
 	margin: 0;
     padding: 0;
     background: #b7bf76;
@@ -9,4 +9,13 @@ body{
 svg {
 	width: 100%;
 	height:inherit;
+}
+
+.score{
+	font-family: cursive;
+	font-size: 1.5em;
+}
+
+.point{
+	font-size:4em;
 }
