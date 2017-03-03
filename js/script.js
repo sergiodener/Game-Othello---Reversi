@@ -146,7 +146,9 @@ function put(circle){
 			if(change(circle.target.id)){
 				var tmp = actualPlayer;
 				actualPlayer=otPlayer;
-			otPlayer = tmp;
+				otPlayer = tmp;
+				document.getElementById("put").play();
+				
 			}
 	}
 	actualPlayer.inGame();
