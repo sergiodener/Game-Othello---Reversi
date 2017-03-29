@@ -2,21 +2,23 @@ var cW = document.documentElement.clientWidth,
 	cH = document.documentElement.clientHeight*.75;
 	
 if (cW<cH){ // caso a altura seja maior que a largura 
-	cH=cW*.85;
+	cH=cW;
 }
 
 class Player {
-	constructor(color, pieces,  cUn, score, points){
+	constructor(color, pieces,  cUn, score, points, seta){
 		this.color = color;
 		this.pieces = (pieces);
 		this.points = points;
 		this.cUn = cUn;
 		this.score = score;	
+		this.seta = seta;
 	}
 
 	 inGame(){
 		document.getElementById(this.score).setAttribute("fill", "#ffd000");
 		document.getElementById(this.points).innerHTML=this.pieces.length;
+		document.getElementById("seta").innerHTML = this.seta;
 		otPlayer.nGame();
 	}
 	
@@ -35,18 +37,19 @@ class Player {
 	
 }
 
+
 function start() {
     gm = Snap("#game");
-	playerW = new Player ("#fff", ["33","44"], "#cce0fc",  "scoreW", "pntsW");
-	playerB = new Player ("#000", ["34","43"], "#bbb7ae",  "scoreB", "pntsB");
+	playerW = new Player ("#fff", ["33","44"], "#cce0fc",  "scoreW", "pntsW","«");
+	playerB = new Player ("#000", ["34","43"], "#bbb7ae",  "scoreB", "pntsB","»");
 	actualPlayer = playerB;
 	otPlayer= playerW;
 	
-	var	a = ((cW-cH)/2),
+	var	a = cW-cH!=0?((cW-cH)*.5):cW*.03,
 		aux = (document.documentElement.clientHeight)-cH,
-		bk =  (cH-cH*.05)/8,
+		bk =  (cH-cH*.05)*.125,
 		f = gm.filter(Snap.filter.shadow(2, 4, .5)),
-	
+		
 		table= gm.rect(a , bk*.25, cH-bk*.45, cH-bk*.45).attr({
 			fill: "#060",
 			id: "table",
@@ -58,7 +61,7 @@ function start() {
 			id: "scoreB"
 		})
 		
-		scrW= gm.rect(bk*.1,cH-bk*.15,(cW-.2*bk)/2, aux-bk*.1).attr({
+		scrW= gm.rect(0,cH-bk*.15,cW*.5, aux).attr({
 			fill: "#e8edde",
 			id: "scoreW"
 		}),
@@ -68,7 +71,7 @@ function start() {
 			filter: f
 		}),
 		
-		plWS= gm.text((cW-.2*bk)/4.3, cH*(1.16),2).attr({
+		plWS= gm.text((cW-.2*bk)/4.3, cH*(1.23),2).attr({
 			"class": "score point",
 			id:"pntsW",
 			filter: f
@@ -79,12 +82,17 @@ function start() {
 			filter: f
 		}),
 		
-		plBS= gm.text((cW-.2*bk)/1.34, cH*(1.16),2).attr({
+		plBS= gm.text((cW-.2*bk)/1.34, cH*(1.23),2).attr({
 			"class": "score point",
 			id:"pntsB",
 			filter: f
 		});
-		
+	
+	var seta = gm.text((cW*.48)+bk*.1, cH*(1.16), "»").attr({
+			"class": "score point",
+			id:"seta",
+			filter: f
+		});
 	g = gm.g();
 	
 	
