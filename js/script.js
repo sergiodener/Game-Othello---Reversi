@@ -40,8 +40,8 @@ class Player {
 
 function start() {
     gm = Snap("#game");
-	playerW = new Player ("#fff", ["33","44"], "#cce0fc",  "scoreW", "pntsW","«");
-	playerB = new Player ("#000", ["34","43"], "#bbb7ae",  "scoreB", "pntsB","»");
+	playerW = new Player ("#fff", ["33","44"], "#cce0fc",  "scoreW", "pntsW","←");
+	playerB = new Player ("#000", ["34","43"], "#bbb7ae",  "scoreB", "pntsB","→");
 	actualPlayer = playerB;
 	otPlayer= playerW;
 	
@@ -88,7 +88,7 @@ function start() {
 			filter: f
 		});
 	
-	var seta = gm.text((cW*.48)+bk*.1, cH*(1.16), "»").attr({
+	var seta = gm.text(cW*.5-30, cH*(1.2), "»").attr({
 			"class": "score point",
 			id:"seta",
 			filter: f
